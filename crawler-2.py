@@ -19,18 +19,21 @@ def get_html(offset):
 
 #网页解析
 def parse_html(html, list):
-    soup = BeautifulSoup(html, 'lxml')
-    dds = soup.dl.find_all('dd')
-    for dd in dds:
-        index = dd.i.text.strip()
-        title = dd.a['title'].strip()
-        star = dd.find('p', class_='star').text.strip()
-        realeasetime = dd.find('p', class_='releasetime').text.strip()
-        image = dd.a.find('img', class_='board-img')['data-src']
-        p = dd.find('p', class_='score')
-        score = p.find('i', class_='integer').text+p.find('i', class_='fraction').text.strip()
-        item = {'排名': index, '电影名称': title, '图片地址': image, '主演': star[3:], '上映时间': realeasetime[5:], '评分': score}
-        list.append(item)
+    if html:
+        soup = BeautifulSoup(html, 'lxml')
+        dds = soup.dl.find_all('dd')
+        for dd in dds:
+            index = dd.i.text.strip()
+            title = dd.a['title'].strip()
+            star = dd.find('p', class_='star').text.strip()
+            realeasetime = dd.find('p', class_='releasetime').text.strip()
+            image = dd.a.find('img', class_='board-img')['data-src']
+            p = dd.find('p', class_='score')
+            score = p.find('i', class_='integer').text+p.find('i', class_='fraction').text.strip()
+            item = {'排名': index, '电影名称': title, '图片地址': image, '主演': star[3:], '上映时间': realeasetime[5:], '评分': score}
+            list.append(item)
+    else:
+        print('爬取失败！')
 
 #保存文件
 def save_file(list):

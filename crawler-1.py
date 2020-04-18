@@ -1,6 +1,8 @@
 import requests
 import re
 
+import selenium
+
 #豆瓣读书的爬取
 
 def book_crawler():
