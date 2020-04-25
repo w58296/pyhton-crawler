@@ -6,6 +6,9 @@ from selenium.webdriver import ChromeOptions
 from selenium.common.exceptions import TimeoutException
 import re
 from pyquery import PyQuery as pq
+import os
+import csv
+
 
 #防止新浪微博登录输入验证码
 option = ChromeOptions()
@@ -41,9 +44,9 @@ def login():
 
         button = browser.find_element_by_css_selector('#pl_login_logged > div > div:nth-child(7) > div:nth-child(1) > a > span')
         #已绑定淘宝的新浪微博账号
-        account.send_keys('**************')
+        account.send_keys('18850953346')
         #密码
-        password.send_keys('*************')
+        password.send_keys('chen520.')
         button.click()
         #搜索商品
         search()
@@ -107,6 +110,7 @@ def next_page(page_num):
 
 #解析商品信息
 def get_product():
+    L = []
     WebDriverWait(browser, 10).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, '#mainsrp-itemlist > div > div > div:nth-child(1)'))
     )
@@ -117,15 +121,25 @@ def get_product():
 
     for item in items:
         product = {
+            'title': item.find('.title').text(),
             'image': item.find('.pic .img').attr('src'),
             'price': item.find('.price').text(),
             'deal': item.find('.deal-cnt').text(),
-            'title': item.find('.title').text(),
             'shop': item.find('.shop').text(),
             'location': item.find('.location').text()
         }
 
-        print(product)
+        L.append(product)
+
+    save_to_file(L)
+
+def save_to_file(L):
+    os.chdir('/Users/chenchunrong/Desktop')
+    with open('taobao.csv', 'a+', encoding='utf-8-sig') as f:
+        header = ['title', 'image', 'price', 'deal', 'shop', 'location']
+        f_csv = csv.DictWriter(f, header)
+        #f_csv.writeheader()
+        f_csv.writerows(L)
 
 
 
@@ -139,4 +153,10 @@ def main():
 
 
 if __name__ == '__main__':
+    os.chdir('/Users/chenchunrong/Desktop')
+    with open('taobao.csv', 'a+', encoding='utf-8-sig') as f:
+        header = ['title', 'image', 'price', 'deal', 'shop', 'location']
+        f_csv = csv.DictWriter(f, header)
+        f_csv.writeheader()
+
     main()

@@ -113,6 +113,9 @@ def save_images(page):
         title = page.get('title')
         urls = page.get('urls')
 
+        if not title:
+            print(urls)
+
         img_path = 'img' + os.path.sep + title
 
         if not os.path.exists(img_path):
